@@ -4,7 +4,7 @@
     "build": {
       "outputs": ["dist/**", ".next/**", "public/dist/**"],
       "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_API_HOST"]
+      "env": ["NEXT_PUBLIC_API_HOST", "QUEUE_URL", "WORKER_NAME", "DATABASE_URL"]
     },
     "test": {
       "outputs": ["coverage/**"],
@@ -18,6 +18,10 @@
       "cache": false
     },
     "clean": {
+      "cache": false
+    },
+    "db:seed": {
+      "outputs": [],
       "cache": false
     }
   }
