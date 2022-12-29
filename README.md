@@ -2,7 +2,7 @@
 
 ## 📝 Objectives
 
-Create a simple project that highlights a basic development environment with k8s.
+Create a simple project that highlights a basic development environment with k8s. 
 
 - [x] Monorepo
 - [x] Web Application / API
