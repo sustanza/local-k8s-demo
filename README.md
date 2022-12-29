@@ -31,6 +31,13 @@ What this project is not intended to provide:
 - [RabbitMQ](https://www.rabbitmq.com)
 - [Keda](https://keda.sh)
 
+### 📼 Video
+
+I tried to keep the video to around an hour, so it is a quick overview and some areas are sped up to make sure it did not get to lengthy. I hope you enjoy it and find it useful.
+
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/Nj55RDVwrIE/0.jpg)](http://www.youtube.com/watch?v=Nj55RDVwrIE "Local K8S Development")
+
 ## 🏗️ Setup
 
 This application can run entirely in containers on k8s. We first need to setup the basic system prerequisites.
