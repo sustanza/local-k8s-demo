@@ -6,6 +6,7 @@ Create a simple project that highlights a basic development environment with k8s
 
 - [x] Monorepo
 - [x] Web Application / API
+- [x] Worker Service
 - [x] Database
 - [x] Queue
 - [x] Event based auto scaling
