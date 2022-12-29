@@ -1,5 +1,5 @@
 {
-  "name": "with-docker",
+  "name": "local-k8s-dev",
   "version": "0.0.0",
   "private": true,
   "workspaces": [

@@ -1,65 +1,87 @@
-# Turborepo Docker starter
+# local-k8s-demo
 
-This is an official Docker starter Turborepo.
+## 📝 Objectives
 
-## What's inside?
+Create a simple project that highlights a basic development environment with k8s.
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+- [x] Monorepo
+- [x] Web Application / API
+- [x] Database
+- [x] Queue
+- [x] Event based auto scaling
 
-### Apps and Packages
+*This project is a POC and not intended for production use*
 
-- `web`: a [Next.js](https://nextjs.org/) app
-- `api`: an [Express](https://expressjs.com/) server
-- `ui`: ui: a React component library
-- `eslint-config-custom`: `eslint` configurations for client side applications (includes `eslint-config-next` and `eslint-config-prettier`)
-- `eslint-config-custom-server`: `eslint` configurations for server side applications (includes `eslint-config-next` and `eslint-config-prettier`)
-- `scripts`: Jest configurations
-- `logger`: Isomorphic logger (a small wrapper around console.log)
-- `tsconfig`: tsconfig.json;s used throughout the monorepo
+What this project is not intended to provide:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- A set of best practices for k8s development/deployment
+- A set of best practices for event driven architecture
+- High quality code or testing
 
-## Using this example
+## 💻 Tech Stack
 
-Run the following command:
+- [TypeScript](https://www.typescriptlang.org)
+- [RancherDesktop](https://rancherdesktop.io)
+- [NextJS](https://nextjs.org)
+- [Prisma](https://www.prisma.io/)
+- [Tilt](https://tilt.dev)
+- [TurboRepo](https://turbo.build)
+- [Kubegres](https://kubegres.io)
+- [RabbitMQ](https://www.rabbitmq.com)
+- [Keda](https://keda.sh)
 
-```sh
-npx degit vercel/turbo/examples/with-docker with-docker
-cd with-docker
-yarn install
-git init . && git add . && git commit -m "Init"
+## 🏗️ Setup
+
+This application can run entirely in containers on k8s. We first need to setup the basic system prerequisites.
+
+### ⚙️ System Prerequisites
+
+- Install NodeJS - Recommended via [ASDF](https://asdf-vm.com)
+  - This is not entirely necessary, but it is helpful being able to interact with the project locally.
+- Install [Rancher Desktop](https://rancherdesktop.io)
+- Enable Kubernetes in Rancher Desktop
+- Install [Tilt](https://tilt.dev)
+
+### 🌎 Environment Variables
+
+- This application is geared towards using environment variables for configurations and secrets. All custom values can be set in a `.env` file set in the `/k8s/secrets` directory
+    - Update `.env.k8s.example` to `.env.k8s` with the desired values you need. By default the only values in here are specific to setting the default database password.
+
+- The queue ([RabbitMQ](https://www.rabbitmq.com)) sets the default user/password values as part of the default behavior of the operator. Those can be found in the `queue-default-user` secret on the k8s cluster once a queue service has been deployed.
+- The baseline configuration for the application to run locally is stored in the root of the project in an `.env` file. This is for running the project just using Turborepo and not within something like k8s. Review the `.env.example` in the root directory to reference the required variables.
+
+## 🛠️ K8S Cluster Setup
+
+#### Once k8s is up and running we have to install some k8s [operators](https://kubernetes.io/docs/concepts/extend-kubernetes/operator)
+
+#### Postgresql
+
+```shell
+kubectl apply -f "https://raw.githubusercontent.com/reactive-tech/kubegres/v1.16/kubegres.yaml"
 ```
 
-### Docker
+#### RabbitMQ
 
-This repo is configured to be built with Docker, and Docker compose. To build all apps in this repo:
-
-```
-# Create a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
-docker network create app_network
-
-# Build prod using new BuildKit engine
-COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build --parallel
-
-# Start prod in detached mode
-docker-compose -f docker-compose.yml up -d
+```shell
+kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 ```
 
-Open http://localhost:3000.
+##### Keda
 
-To shutdown all running containers:
-
-```
-# Stop all running containers
-docker kill $(docker ps -q) && docker rm $(docker ps -a -q)
+```shell
+kubectl apply -f "https://github.com/kedacore/keda/releases/download/v2.9.0/keda-2.9.0.yaml"
 ```
 
-### Utilities
+### Database Setup
 
-This Turborepo has some additional tools already setup for you:
+```shell
+prisma migrate dev
+```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Jest](https://jestjs.io) test runner for all things JavaScript
-- [Prettier](https://prettier.io) for code formatting
+### 💡 k8s Helpful Commands
+
+#### Clean up images and restore space
+
+```bash
+nerdctl -n "k8s.io" system prune -a
+```

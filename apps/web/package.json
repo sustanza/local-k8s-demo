@@ -12,9 +12,13 @@
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ui": "*"
+    "logger": "*",
+    "database": "*",
+    "amqplib": "0.10.3"
+    
   },
   "devDependencies": {
+    "@types/amqplib": "0.8.2",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",

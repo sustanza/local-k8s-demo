@@ -1,0 +1,49 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker-ping-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: worker-ping
+  minReplicaCount: 0
+  maxReplicaCount: 3
+  pollingInterval: 5 # Optional. Default: 30 seconds
+  cooldownPeriod: 30 # Optional. Default: 300 seconds
+  env:
+    - name: QUEUE_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: queue-default-user
+          key: username
+          optional: false
+    - name: QUEUE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: queue-default-user
+          key: password
+          optional: false
+    - name: QUEUE_HOST
+      valueFrom:
+        secretKeyRef:
+          name: queue-default-user
+          key: host
+          optional: false
+    - name: QUEUE_PORT
+      valueFrom:
+        secretKeyRef:
+          name: queue-default-user
+          key: port
+          optional: false
+    - name: QUEUE_URL
+      value: amqp://$(QUEUE_USERNAME):$(QUEUE_PASSWORD)@$(QUEUE_HOST):$(QUEUE_PORT)/
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: worker-ping
+        mode: QueueLength
+        value: "5"
+        hostFromEnv: QUEUE_URL
+      authenticationRef:
+        name: keda-trigger-auth-rabbitmq-conn
+        hostFromEnv: QUEUE_URL

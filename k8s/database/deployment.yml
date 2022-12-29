@@ -1,0 +1,33 @@
+apiVersion: kubegres.reactive-tech.io/v1
+kind: Kubegres
+metadata:
+  name: db
+  labels:
+    app: db
+  namespace: default
+spec:
+  port: 5432
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+  replicas: 1
+  image: postgres:15.1
+  database:
+    size: 1Gi
+  env:
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: dotenv
+          key: POSTGRES_PASSWORD
+          optional: false
+    - name: POSTGRES_REPLICATION_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: dotenv
+          key: POSTGRES_REPLICATION_PASSWORD
+          optional: false

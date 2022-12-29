@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - name: webapp
+          image: webapp-image
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 500Mi
+          env:
+            - name: QUEUE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: queue-default-user
+                  key: username
+                  optional: false
+            - name: QUEUE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: queue-default-user
+                  key: password
+                  optional: false
+            - name: QUEUE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: queue-default-user
+                  key: host
+                  optional: false
+            - name: QUEUE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: queue-default-user
+                  key: port
+                  optional: false
+            - name: QUEUE_URL
+              value: amqp://$(QUEUE_USERNAME):$(QUEUE_PASSWORD)@$(QUEUE_HOST):$(QUEUE_PORT)
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dotenv
+                  key: POSTGRES_PASSWORD
+                  optional: false
+            - name: DATABASE_URL
+              value: postgres://postgres:$(POSTGRES_PASSWORD)@db:5432/app?schema=public
