@@ -30,7 +30,7 @@ nerdctl_build(
 ## Adds the web app resource
 k8s_resource(
     'webapp',
-    port_forwards=[3000],
+    port_forwards=[3000, 9229],
     resource_deps=['db', 'queue'],
     labels=["apps"]
 )
