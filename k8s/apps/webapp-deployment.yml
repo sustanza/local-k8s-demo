@@ -17,7 +17,10 @@ spec:
         - name: webapp
           image: webapp-image
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
+            - name: debug
+              containerPort: 9229
           resources:
             limits:
               cpu: 1000m
