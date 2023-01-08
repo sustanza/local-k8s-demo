@@ -81,6 +81,14 @@ k8s_resource(
     labels=['keda-scaler']
 )
 
+k8s_resource(
+    new_name='jaeger',
+    port_forwards=[16686],
+    objects=['jaeger:Jaeger:default'],
+    resource_deps=['dotenv'],
+    labels=['observability']
+)
+
 # Define kustomize resources
 secrets_yaml = kustomize('./k8s/secrets/')
 
@@ -91,6 +99,8 @@ k8s_yaml('./k8s/apps/webapp-deployment.yml')
 
 ## Worker: worker-ping
 k8s_yaml('./k8s/apps/worker-ping-deployment.yml')
+
+k8s_yaml('./k8s/observability/jaeger.yml')
 
 ## Add in our secrets from kustomize configuration
 k8s_yaml(secrets_yaml)

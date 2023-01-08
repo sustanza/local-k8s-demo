@@ -1,5 +1,7 @@
 import {connect, Channel} from "amqplib";
 import logger from "logger";
+import "./tracer";
+import {trace} from "@opentelemetry/api"
 
 const workerPing = async(channel: Channel) => {
     channel.consume('worker-ping', async (msg) => {
@@ -22,7 +24,23 @@ const workerPing = async(channel: Channel) => {
 }
 
 const workerPingExec = async (ping: string) => {
-    logger.info(`Recieved ping: ${ping}`)
+    const tracer = trace.getTracer('worker')
+
+    tracer.startActiveSpan('worker-ping', async (span) => {
+        span.setAttribute('ping', ping);
+
+        if (process.env.WORKER_NAME) {
+            span.setAttribute('WORKER_NAME', process.env.WORKER_NAME);
+        }
+        
+        if (process.env.HOSTNAME) {
+            span.setAttribute('HOSTNAME', process.env.HOSTNAME);
+        }
+
+        logger.info(`Recieved ping: ${ping}`);
+        
+        span.end();
+    })
 }
 
 // create a basic self executing anonymous func

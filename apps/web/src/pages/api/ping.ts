@@ -34,8 +34,8 @@ export default async function handler(
     // assert there is a queue, create and make sure it's configured to our specifications
     await queueChannel.assertQueue('worker-ping')
 
-    for (let i = 0; i < 1000; i++) {
-      queueChannel.sendToQueue('worker-ping', Buffer.from(JSON.stringify({ping: 'Hey there 👋'})))
+    for (let i = 0; i < 100; i++) {
+      queueChannel.sendToQueue('worker-ping', Buffer.from(JSON.stringify({ping: `Hey there 👋 ${i}`})))
   
       // hang around for the message to be sent to the queue
       setTimeout(async () => {
