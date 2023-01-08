@@ -6,8 +6,8 @@
     "private": true,
     "scripts": {
         "start": "node dist/index.js",
-        "dev": "tsup src/index.ts --format cjs --watch --onSuccess \\\"node dist/index.js\\\"",
-        "lint": "tsc --noEmit && TIMING=1 eslint \"src/**/*.ts*\"",
+        "dev": "tsup src/index.ts --format cjs --watch --onSuccess 'node dist/index.js'",
+        "lint": "tsc --noEmit && TIMING=1 eslint 'src/**/*.ts*'",
         "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
         "build": "tsup src/index.ts --format cjs"
     },
