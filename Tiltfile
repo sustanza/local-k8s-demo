@@ -13,8 +13,10 @@ nerdctl_build(
     context='.',
     ignore=['./k8s', './apps/worker'],
     build_args={'node_env': 'development'},
-        entrypoint='yarn dev --filter web',
-        live_update=[sync('.', '/app')]
+        entrypoint='yarn turbo run dev --filter web',
+        live_update=[
+            sync('.', '/app')
+        ]
 )
 
 # Build worker image
@@ -22,7 +24,12 @@ nerdctl_build(
     'worker-image',
     dockerfile='./apps/worker/Dockerfile',
     context='.',
-    ignore=['./apps/web', './k8s']
+    ignore=['./apps/web', './k8s'],
+    build_args={'node_env': 'development'},
+    entrypoint='yarn turbo run dev --filter worker',
+    live_update=[
+        sync('.', '/app')
+    ]
 )
 
 # Define our k8s resources

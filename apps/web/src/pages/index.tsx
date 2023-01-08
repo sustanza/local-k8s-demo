@@ -1,7 +1,7 @@
 export default function IndexPage() {
   return (
     <div>
-      <h1>Cool. Hot. Reloading. Image :)</h1>
+      <h1>Part 4 - Tilt/Turbo live reloading updates 💪</h1>
     </div>
   );
 }
